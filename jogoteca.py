@@ -1,6 +1,5 @@
-from hashlib import new
-from colorama import init
-from flask import Flask, redirect, render_template, request
+
+from flask import Flask, redirect, render_template, request, session, flash
 
 
 class Jogo:
@@ -17,6 +16,7 @@ jogo3 = Jogo('Fortnite', 'Tiro', 'PC/Xbox/PS')
 lista_de_jogos = [jogo1, jogo2, jogo3]
 
 app = Flask(__name__)
+app.secret_key='guiwalper'
 
 
 @app.route('/')
@@ -47,5 +47,17 @@ def login():
 
 
     return render_template('login.html')
+
+@app.route('/autenticar', methods=['POST', 'GET'])
+def autenticar():
+
+    if 'alohomora' == request.form['senha']:
+        session['usuario_logado'] = request.form['usuario']
+        flash(session['usuario_logado'] + ' logado com sucesso!')
+        return redirect('/')
+
+    else:
+        flash('Usuário não logado')
+        return redirect('login')
 
 app.run(debug=True, host='0.0.0.0', port=8080)

@@ -9,9 +9,24 @@ class Jogo:
         self.console = console
 
 
+class Usuario:
+    def __init__(self, nome, senha, nickname):
+        self.nome = nome
+        self.senha = senha
+        self.nickname = nickname
+
+
 jogo1 = Jogo('League of Legends', 'Moba', 'PC')
 jogo2 = Jogo('Overwatch', 'Tiro', 'PC/Xbox/PS')
 jogo3 = Jogo('Fortnite', 'Tiro', 'PC/Xbox/PS')
+
+usuario1 = Usuario('Guilherme Waldschmidt', 'guiwalper', 'guiwalper')
+usuario2 = Usuario('Ana Clara', 'clarinha', 'clarinha')
+usuario3 = Usuario('Draven', 'draven', 'draven')
+
+usuarios = {usuario1.nickname: usuario1,
+            usuario2.nickname: usuario2,
+            usuario3.nickname: usuario3}
 
 lista_de_jogos = [jogo1, jogo2, jogo3]
 
@@ -53,11 +68,13 @@ def login():
 
 @app.route('/autenticar', methods=['POST', 'GET'])
 def autenticar():
+    user_login =  request.form['usuario']
+    if user_login in usuarios:
+        if request.form['senha'] in usuarios[user_login].senha:
 
-    if 'alohomora' == request.form['senha']:
-        session['usuario_logado'] = request.form['usuario']
-        flash(session['usuario_logado'] + ' logado com sucesso!')
-        return redirect(url_for('index'))
+            session['usuario_logado'] = user_login
+            flash(session['usuario_logado'] + ' logado com sucesso!')
+            return redirect(url_for('index'))
 
     else:
         flash('Usuário não logado')
